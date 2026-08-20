@@ -5,1539 +5,172 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>LemonTrack</title>
+    <title>LevelUp - Learning Tracker</title>
 
-    <style>
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        :root {
-            --lime: #b8f500;
-            --lime-dark: #7fa900;
-            --lime-light: #efffc7;
-            --background: #f5f7f2;
-            --card: #ffffff;
-            --text: #171917;
-            --muted: #777;
-            --border: #e3e7df;
-            --sidebar: #171a18;
-            --danger: #e74c3c;
-        }
-
-        body {
-            background: var(--background);
-            color: var(--text);
-        }
-
-        button {
-            cursor: pointer;
-            border: none;
-        }
-
-        /* ==================================
-           LOGIN PAGE
-        ================================== */
-
-        #loginPage {
-            position: fixed;
-            inset: 0;
-
-            background:
-                radial-gradient(
-                    circle at 15% 20%,
-                    rgba(184,245,0,0.25),
-                    transparent 30%
-                ),
-                radial-gradient(
-                    circle at 85% 80%,
-                    rgba(184,245,0,0.18),
-                    transparent 30%
-                ),
-                #f5f7f2;
-
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            z-index: 9999;
-        }
-
-        .login-wrapper {
-            width: 900px;
-            max-width: 92%;
-
-            min-height: 550px;
-
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-
-            background: white;
-
-            border-radius: 25px;
-
-            overflow: hidden;
-
-            box-shadow:
-                0 25px 70px rgba(0,0,0,0.12);
-
-            animation: loginAppear .6s ease;
-        }
-
-        @keyframes loginAppear {
-
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .login-left {
-            background: #171a18;
-
-            color: white;
-
-            padding: 50px;
-
-            display: flex;
-            flex-direction: column;
-
-            justify-content: center;
-        }
-
-        .login-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-
-            margin-bottom: 25px;
-        }
-
-        .login-logo-icon {
-            font-size: 45px;
-        }
-
-        .login-logo h1 {
-            color: var(--lime);
-            font-size: 30px;
-        }
-
-        .login-left h2 {
-            font-size: 35px;
-            line-height: 1.15;
-
-            margin-bottom: 15px;
-        }
-
-        .login-left h2 span {
-            color: var(--lime);
-        }
-
-        .login-left p {
-            color: #aaa;
-
-            line-height: 1.7;
-
-            font-size: 14px;
-
-            max-width: 350px;
-        }
-
-        .login-features {
-            margin-top: 30px;
-
-            display: flex;
-            flex-direction: column;
-
-            gap: 14px;
-        }
-
-        .login-feature {
-            display: flex;
-
-            align-items: center;
-
-            gap: 10px;
-
-            color: #ddd;
-
-            font-size: 13px;
-        }
-
-        .login-feature span {
-            width: 25px;
-            height: 25px;
-
-            background: var(--lime);
-
-            color: black;
-
-            border-radius: 50%;
-
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .login-right {
-            padding: 50px;
-
-            display: flex;
-            flex-direction: column;
-
-            justify-content: center;
-        }
-
-        .login-right h2 {
-            font-size: 28px;
-
-            margin-bottom: 8px;
-        }
-
-        .login-right > p {
-            color: var(--muted);
-
-            font-size: 13px;
-
-            margin-bottom: 30px;
-        }
-
-        .login-input-group {
-            margin-bottom: 18px;
-        }
-
-        .login-input-group label {
-            display: block;
-
-            font-size: 12px;
-
-            font-weight: bold;
-
-            margin-bottom: 7px;
-        }
-
-        .login-input {
-            width: 100%;
-
-            padding: 14px;
-
-            border: 1px solid var(--border);
-
-            border-radius: 10px;
-
-            font-size: 14px;
-
-            transition: .2s;
-        }
-
-        .login-input:focus {
-            border-color: var(--lime-dark);
-
-            box-shadow:
-                0 0 0 3px
-                rgba(184,245,0,.2);
-        }
-
-        .login-button {
-            width: 100%;
-
-            padding: 14px;
-
-            background: var(--lime);
-
-            border-radius: 10px;
-
-            font-weight: bold;
-
-            font-size: 14px;
-
-            margin-top: 5px;
-
-            transition: .2s;
-        }
-
-        .login-button:hover {
-            transform: translateY(-2px);
-
-            box-shadow:
-                0 8px 20px
-                rgba(184,245,0,.3);
-        }
-
-        .login-error {
-            display: none;
-
-            color: var(--danger);
-
-            font-size: 12px;
-
-            margin-top: 10px;
-        }
-
-        .login-note {
-            text-align: center;
-
-            margin-top: 20px;
-
-            color: #999;
-
-            font-size: 10px;
-        }
-
-
-        /* ==================================
-           APP
-        ================================== */
-
-        #app {
-            display: none;
-        }
-
-
-        /* ==================================
-           SIDEBAR
-        ================================== */
-
-        .sidebar {
-            position: fixed;
-
-            left: 0;
-            top: 0;
-            bottom: 0;
-
-            width: 240px;
-
-            background: var(--sidebar);
-
-            color: white;
-
-            padding: 25px 15px;
-
-            z-index: 100;
-        }
-
-        .logo {
-            display: flex;
-
-            align-items: center;
-
-            gap: 10px;
-
-            padding-left: 10px;
-        }
-
-        .logo-icon {
-            font-size: 28px;
-        }
-
-        .logo h1 {
-            color: var(--lime);
-
-            font-size: 21px;
-        }
-
-        .subtitle {
-            color: #999;
-
-            font-size: 11px;
-
-            margin:
-                5px 0 30px 49px;
-        }
-
-        .nav {
-            display: flex;
-
-            flex-direction: column;
-
-            gap: 5px;
-        }
-
-        .nav-item {
-            display: flex;
-
-            align-items: center;
-
-            gap: 12px;
-
-            padding: 13px;
-
-            border-radius: 10px;
-
-            color: #ddd;
-
-            cursor: pointer;
-        }
-
-        .nav-item:hover {
-            background: #292d2a;
-        }
-
-        .nav-item.active {
-            background: var(--lime);
-
-            color: #111;
-
-            font-weight: bold;
-        }
-
-        .streak-box {
-            position: absolute;
-
-            left: 15px;
-            right: 15px;
-            bottom: 110px;
-
-            background: #202420;
-
-            border:
-                1px solid #343934;
-
-            border-radius: 15px;
-
-            padding: 18px;
-
-            text-align: center;
-        }
-
-        .streak-number {
-            color: var(--lime);
-
-            font-size: 30px;
-
-            font-weight: bold;
-        }
-
-        .streak-label {
-            color: #aaa;
-
-            font-size: 11px;
-
-            margin-top: 5px;
-        }
-
-        .quote {
-            position: absolute;
-
-            left: 15px;
-            right: 15px;
-            bottom: 20px;
-
-            color: #999;
-
-            font-size: 10px;
-
-            line-height: 1.5;
-        }
-
-        .quote span {
-            color: var(--lime);
-        }
-
-
-        /* ==================================
-           MAIN
-        ================================== */
-
-        .main {
-            margin-left: 240px;
-
-            padding: 30px 35px;
-        }
-
-        .topbar {
-            display: flex;
-
-            justify-content: space-between;
-
-            align-items: center;
-
-            margin-bottom: 25px;
-        }
-
-        .greeting h2 {
-            font-size: 27px;
-        }
-
-        .greeting p {
-            margin-top: 5px;
-
-            color: var(--muted);
-        }
-
-        .greeting span {
-            color: var(--lime-dark);
-
-            font-weight: bold;
-        }
-
-        .top-actions {
-            display: flex;
-
-            align-items: center;
-
-            gap: 10px;
-        }
-
-        .icon-button {
-            width: 42px;
-            height: 42px;
-
-            border-radius: 50%;
-
-            background: white;
-
-            border:
-                1px solid var(--border);
-
-            font-size: 17px;
-        }
-
-        .profile-button {
-            width: 42px;
-            height: 42px;
-
-            border-radius: 50%;
-
-            background: var(--lime);
-
-            display: flex;
-
-            justify-content: center;
-
-            align-items: center;
-        }
-
-
-        /* ==================================
-           STATS
-        ================================== */
-
-        .stats-grid {
-            display: grid;
-
-            grid-template-columns:
-                1.5fr repeat(3,1fr);
-
-            gap: 18px;
-        }
-
-        .stat-card {
-            background: var(--card);
-
-            border:
-                1px solid var(--border);
-
-            border-radius: 16px;
-
-            padding: 22px;
-
-            box-shadow:
-                0 5px 20px
-                rgba(0,0,0,.04);
-        }
-
-        .stat-title {
-            color: #555;
-
-            font-size: 12px;
-
-            font-weight: bold;
-        }
-
-        .stat-number {
-            margin-top: 16px;
-
-            font-size: 30px;
-
-            font-weight: bold;
-        }
-
-        .lime-text {
-            color: var(--lime-dark);
-        }
-
-        .stat-description {
-            color: var(--muted);
-
-            font-size: 11px;
-
-            margin-top: 5px;
-        }
-
-        .progress {
-            height: 9px;
-
-            background: #e8ebe5;
-
-            border-radius: 20px;
-
-            overflow: hidden;
-
-            margin-top: 15px;
-        }
-
-        .progress-bar {
-            height: 100%;
-
-            background: var(--lime);
-
-            width: 0%;
-
-            transition: .5s;
-        }
-
-
-        /* ==================================
-           CARDS
-        ================================== */
-
-        .dashboard-grid {
-            display: grid;
-
-            grid-template-columns:
-                .9fr 1.1fr;
-
-            gap: 20px;
-
-            margin-top: 20px;
-        }
-
-        .card {
-            background: white;
-
-            border:
-                1px solid var(--border);
-
-            border-radius: 16px;
-
-            padding: 22px;
-
-            box-shadow:
-                0 5px 20px
-                rgba(0,0,0,.04);
-        }
-
-        .card-header {
-            display: flex;
-
-            justify-content: space-between;
-
-            align-items: center;
-
-            margin-bottom: 18px;
-        }
-
-
-        /* ==================================
-           GOALS
-        ================================== */
-
-        .goal-card {
-            background:
-                linear-gradient(
-                    135deg,
-                    #efffc5,
-                    white
-                );
-        }
-
-        .goal {
-            display: flex;
-
-            align-items: center;
-
-            gap: 10px;
-
-            padding: 12px;
-
-            background: white;
-
-            border:
-                1px solid #eee;
-
-            border-radius: 9px;
-
-            margin-bottom: 8px;
-        }
-
-        .goal input {
-            width: 18px;
-            height: 18px;
-
-            accent-color:
-                var(--lime-dark);
-        }
-
-        .goal-name {
-            flex: 1;
-
-            font-size: 13px;
-        }
-
-        .goal.completed
-        .goal-name {
-            text-decoration:
-                line-through;
-
-            color: #999;
-        }
-
-        .goal-status {
-            font-size: 10px;
-
-            background: #fff0a8;
-
-            padding: 5px 8px;
-
-            border-radius: 5px;
-        }
-
-        .goal.completed
-        .goal-status {
-            background:
-                var(--lime-light);
-        }
-
-        .add-button {
-            width: 100%;
-
-            padding: 11px;
-
-            background: var(--lime);
-
-            border-radius: 8px;
-
-            font-weight: bold;
-        }
-
-
-        /* ==================================
-           CHART
-        ================================== */
-
-        .chart {
-            height: 230px;
-        }
-
-        .chart svg {
-            width: 100%;
-            height: 100%;
-        }
-
-        .chart-grid {
-            stroke: #eee;
-        }
-
-        .chart-line {
-            fill: none;
-
-            stroke:
-                var(--lime-dark);
-
-            stroke-width: 3;
-        }
-
-        .chart-area {
-            fill:
-                rgba(
-                    184,
-                    245,
-                    0,
-                    .16
-                );
-        }
-
-        .chart-dot {
-            fill:
-                var(--lime-dark);
-        }
-
-
-        /* ==================================
-           COURSES
-        ================================== */
-
-        .section-heading {
-            display: flex;
-
-            justify-content:
-                space-between;
-
-            align-items: center;
-
-            margin: 28px 0 15px;
-        }
-
-        .add-course-button {
-            background: var(--lime);
-
-            padding: 10px 16px;
-
-            border-radius: 8px;
-
-            font-weight: bold;
-        }
-
-        .course-grid {
-            display: grid;
-
-            grid-template-columns:
-                repeat(2,1fr);
-
-            gap: 15px;
-        }
-
-        .course-card {
-            background: white;
-
-            border:
-                1px solid var(--border);
-
-            border-radius: 16px;
-
-            padding: 18px;
-
-            box-shadow:
-                0 5px 20px
-                rgba(0,0,0,.04);
-        }
-
-        .course-top {
-            display: flex;
-
-            align-items: center;
-
-            gap: 12px;
-        }
-
-        .course-icon {
-            width: 48px;
-            height: 48px;
-
-            border-radius: 12px;
-
-            background:
-                var(--lime-light);
-
-            display: flex;
-
-            justify-content: center;
-
-            align-items: center;
-
-            font-size: 22px;
-        }
-
-        .course-info {
-            flex: 1;
-        }
-
-        .course-info p {
-            color: var(--muted);
-
-            font-size: 11px;
-
-            margin-top: 4px;
-        }
-
-        .course-percent {
-            font-weight: bold;
-
-            font-size: 19px;
-
-            color:
-                var(--lime-dark);
-        }
-
-        .course-actions {
-            display: flex;
-
-            gap: 8px;
-
-            margin-top: 14px;
-        }
-
-        .course-actions button {
-            flex: 1;
-
-            padding: 8px;
-
-            border-radius: 7px;
-        }
-
-        .view-button {
-            background: #f0f1ee;
-        }
-
-        .delete-button {
-            background: #fff0ef;
-
-            color: var(--danger);
-        }
-
-
-        /* ==================================
-           BOTTOM
-        ================================== */
-
-        .bottom-grid {
-            display: grid;
-
-            grid-template-columns:
-                1fr 1fr;
-
-            gap: 20px;
-
-            margin-top: 20px;
-
-            margin-bottom: 40px;
-        }
-
-        .activity {
-            display: flex;
-
-            gap: 10px;
-
-            padding: 12px 0;
-
-            border-bottom:
-                1px solid var(--border);
-        }
-
-        .activity-icon {
-            width: 29px;
-            height: 29px;
-
-            background:
-                var(--lime-light);
-
-            border-radius: 50%;
-
-            display: flex;
-
-            justify-content: center;
-
-            align-items: center;
-        }
-
-        .activity-text {
-            font-size: 12px;
-        }
-
-        .activity-time {
-            color: #999;
-
-            font-size: 10px;
-
-            margin-top: 3px;
-        }
-
-
-        /* ==================================
-           ACHIEVEMENTS
-        ================================== */
-
-        .achievements {
-            display: grid;
-
-            grid-template-columns:
-                repeat(4,1fr);
-
-            gap: 12px;
-        }
-
-        .achievement {
-            text-align: center;
-
-            opacity: .25;
-        }
-
-        .achievement.unlocked {
-            opacity: 1;
-        }
-
-        .badge {
-            width: 55px;
-            height: 55px;
-
-            margin: auto;
-
-            border-radius: 50%;
-
-            border:
-                2px solid
-                var(--lime-dark);
-
-            background:
-                var(--lime-light);
-
-            display: flex;
-
-            justify-content: center;
-
-            align-items: center;
-
-            font-size: 22px;
-        }
-
-
-        /* ==================================
-           CALENDAR
-        ================================== */
-
-        .calendar-section,
-        .notes-section,
-        .achievements-section {
-            display: none;
-
-            margin-top: 25px;
-        }
-
-        .calendar-header {
-            display: flex;
-
-            justify-content:
-                space-between;
-
-            align-items: center;
-        }
-
-        .calendar-nav {
-            width: 32px;
-            height: 32px;
-
-            background: var(--lime);
-
-            border-radius: 7px;
-        }
-
-        .calendar-week,
-        .calendar-grid {
-            display: grid;
-
-            grid-template-columns:
-                repeat(7,1fr);
-
-            gap: 5px;
-
-            margin-top: 10px;
-        }
-
-        .calendar-week div {
-            text-align: center;
-
-            color: #999;
-
-            font-size: 10px;
-        }
-
-        .calendar-day {
-            min-height: 55px;
-
-            border:
-                1px solid var(--border);
-
-            border-radius: 7px;
-
-            padding: 6px;
-
-            font-size: 11px;
-        }
-
-        .calendar-day.active {
-            background: var(--lime);
-
-            border-color:
-                var(--lime);
-        }
-
-        .calendar-day.today {
-            border:
-                2px solid
-                var(--lime-dark);
-        }
-
-
-        /* ==================================
-           NOTES
-        ================================== */
-
-        .notes-grid {
-            display: grid;
-
-            grid-template-columns:
-                repeat(3,1fr);
-
-            gap: 15px;
-        }
-
-        .note {
-            background: #ffffd9;
-
-            border-radius: 14px;
-
-            padding: 18px;
-
-            min-height: 160px;
-        }
-
-        .note p {
-            color: #555;
-
-            font-size: 12px;
-
-            line-height: 1.5;
-
-            white-space: pre-wrap;
-
-            margin-top: 8px;
-        }
-
-        .note-actions {
-            display: flex;
-
-            gap: 8px;
-
-            margin-top: 15px;
-        }
-
-        .note-actions button {
-            padding: 6px 9px;
-
-            border-radius: 6px;
-
-            font-size: 10px;
-        }
-
-
-        /* ==================================
-           MODAL
-        ================================== */
-
-        .modal {
-            display: none;
-
-            position: fixed;
-
-            inset: 0;
-
-            background:
-                rgba(0,0,0,.55);
-
-            z-index: 1000;
-
-            justify-content: center;
-
-            align-items: center;
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-box {
-            width: 450px;
-
-            max-width: 92%;
-
-            max-height: 85vh;
-
-            overflow-y: auto;
-
-            background: white;
-
-            border-radius: 16px;
-
-            padding: 25px;
-        }
-
-        .modal-header {
-            display: flex;
-
-            justify-content:
-                space-between;
-
-            align-items: center;
-
-            margin-bottom: 20px;
-        }
-
-        .close-button {
-            background: transparent;
-
-            font-size: 24px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-
-            font-size: 12px;
-
-            font-weight: bold;
-
-            margin-bottom: 6px;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-
-            padding: 11px;
-
-            border:
-                1px solid
-                var(--border);
-
-            border-radius: 8px;
-        }
-
-        .form-group textarea {
-            height: 130px;
-        }
-
-        .submit-button {
-            width: 100%;
-
-            padding: 12px;
-
-            background: var(--lime);
-
-            border-radius: 8px;
-
-            font-weight: bold;
-        }
-
-
-        /* ==================================
-           TOPICS
-        ================================== */
-
-        .topic {
-            display: flex;
-
-            align-items: center;
-
-            gap: 10px;
-
-            padding: 11px 0;
-
-            border-bottom:
-                1px solid var(--border);
-        }
-
-        .topic input {
-            width: 18px;
-            height: 18px;
-
-            accent-color:
-                var(--lime-dark);
-        }
-
-        .topic-name {
-            flex: 1;
-
-            font-size: 13px;
-        }
-
-        .topic.completed
-        .topic-name {
-            text-decoration:
-                line-through;
-
-            color: #999;
-        }
-
-        .topic-delete {
-            background: transparent;
-
-            color: var(--danger);
-        }
-
-        .topic-add {
-            display: flex;
-
-            gap: 7px;
-
-            margin-top: 15px;
-        }
-
-        .topic-add input {
-            flex: 1;
-
-            padding: 10px;
-
-            border:
-                1px solid
-                var(--border);
-
-            border-radius: 8px;
-        }
-
-        .topic-add button {
-            background: var(--lime);
-
-            padding: 10px;
-
-            border-radius: 8px;
-        }
-
-
-        /* ==================================
-           MOBILE
-        ================================== */
-
-        .mobile-menu {
-            display: none;
-
-            background: var(--lime);
-
-            padding: 8px;
-
-            border-radius: 7px;
-        }
-
-        @media(max-width:1000px) {
-
-            .stats-grid {
-                grid-template-columns:
-                    repeat(2,1fr);
-            }
-
-            .dashboard-grid {
-                grid-template-columns:1fr;
-            }
-
-            .course-grid {
-                grid-template-columns:1fr;
-            }
-
-        }
-
-        @media(max-width:700px) {
-
-            .login-wrapper {
-                grid-template-columns:1fr;
-            }
-
-            .login-left {
-                display:none;
-            }
-
-            .sidebar {
-                transform:
-                    translateX(-100%);
-
-                transition:.3s;
-            }
-
-            .sidebar.open {
-                transform:
-                    translateX(0);
-            }
-
-            .main {
-                margin-left:0;
-
-                padding:20px;
-            }
-
-            .mobile-menu {
-                display:block;
-            }
-
-            .stats-grid,
-            .bottom-grid {
-                grid-template-columns:1fr;
-            }
-
-            .notes-grid {
-                grid-template-columns:1fr;
-            }
-
-            .achievements {
-                grid-template-columns:
-                    repeat(2,1fr);
-            }
-
-        }
-
-    </style>
-
+    <link rel="stylesheet" href="style.css">
 </head>
-
 
 <body>
 
 
-<!-- ==================================================
-     LOGIN PAGE
-================================================== -->
+    <!-- ==================================================
+         LOGIN PAGE
+    ================================================== -->
 
-<div id="loginPage">
+    <div id="loginPage">
 
-    <div class="login-wrapper">
-
-
-        <!-- LEFT SIDE -->
-
-        <div class="login-left">
-
-            <div class="login-logo">
-
-                <div class="login-logo-icon">
-                    🍋
-                </div>
-
-                <h1>
-                    LemonTrack
-                </h1>
-
-            </div>
+        <div class="login-wrapper">
 
 
-            <h2>
+            <!-- LEFT SIDE -->
 
-                Turn your learning
-                <span>into progress.</span>
+            <div class="login-left">
 
-            </h2>
+                <div class="login-logo">
 
+                    <span>🚀</span>
 
-            <p>
-
-                Track your courses, topics,
-                goals and daily consistency
-                in one simple personal
-                learning dashboard.
-
-            </p>
-
-
-            <div class="login-features">
-
-                <div class="login-feature">
-
-                    <span>✓</span>
-
-                    Track course progress
+                    <h1>LevelUp</h1>
 
                 </div>
 
 
-                <div class="login-feature">
+                <h2>
 
-                    <span>✓</span>
+                    See yourself
+                    <span>progressing & leveling up.</span>
 
-                    Build daily consistency
-
-                </div>
-
-
-                <div class="login-feature">
-
-                    <span>✓</span>
-
-                    Earn achievements
-
-                </div>
+                </h2>
 
 
-                <div class="login-feature">
+                <p>
 
-                    <span>✓</span>
+                    Track your learning, stay consistent,
+                    and watch yourself level up every day.
 
-                    See your growth
+                </p>
+
+
+                <div class="login-features">
+
+                    <div>
+
+                        <span>✓</span>
+
+                        Track course progress
+
+                    </div>
+
+
+                    <div>
+
+                        <span>✓</span>
+
+                        Build daily consistency
+
+                    </div>
+
+
+                    <div>
+
+                        <span>✓</span>
+
+                        Earn achievements
+
+                    </div>
+
+
+                    <div>
+
+                        <span>✓</span>
+
+                        See your growth
+
+                    </div>
 
                 </div>
 
             </div>
 
-        </div>
 
 
-        <!-- RIGHT SIDE -->
+            <!-- RIGHT SIDE -->
 
-        <div class="login-right">
+            <div class="login-right">
 
-            <h2>
-                Welcome back 👋
-            </h2>
-
-            <p>
-                Let's continue your learning journey.
-            </p>
+                <h2>
+                    Welcome back 👋
+                </h2>
 
 
-            <div class="login-input-group">
+                <p>
+                    Let's continue your learning journey.
+                </p>
+
 
                 <label>
                     Your Name
                 </label>
 
+
                 <input
                     type="text"
                     id="loginName"
-                    class="login-input"
                     placeholder="Enter your name"
-                    autocomplete="name">
+                >
 
-            </div>
-
-
-            <div class="login-input-group">
 
                 <label>
+
                     Email
-                    <span style="color:#aaa;">
-                        (optional)
-                    </span>
+                    <small>(optional)</small>
+
                 </label>
+
 
                 <input
                     type="email"
                     id="loginEmail"
-                    class="login-input"
-                    placeholder="you@example.com">
-
-            </div>
+                    placeholder="you@example.com"
+                >
 
 
-            <button
-                class="login-button"
-                onclick="login()">
+                <button
+                    class="login-button"
+                    onclick="login()">
 
-                Enter LemonTrack 🍋
+                    Login to LevelUp 🚀
 
-            </button>
-
-
-            <div
-                class="login-error"
-                id="loginError">
-
-                Please enter your name to continue.
-
-            </div>
+                </button>
 
 
-            <div class="login-note">
+                <p
+                    id="loginError"
+                    class="error">
 
-                Your data is stored locally
-                on this device.
+                    Please enter your name.
+
+                </p>
+
+
+                <!-- REGISTER LINK -->
+
+                <div class="register-link">
+
+                    Don't have an account?
+
+                    <span onclick="showRegister()">
+                        Register
+                    </span>
+
+                </div>
+
+
+                <small class="login-note">
+
+                    Your data is stored locally on this device.
+
+                </small>
 
             </div>
 
@@ -1545,3145 +178,1147 @@
 
     </div>
 
-</div>
 
 
+    <!-- ==================================================
+         REGISTER PAGE
+    ================================================== -->
 
-<!-- ==================================================
-     APPLICATION
-================================================== -->
+    <div id="registerPage">
 
-<div id="app">
-
-
-    <!-- SIDEBAR -->
-
-    <aside class="sidebar"
-           id="sidebar">
-
-        <div class="logo">
-
-            <div class="logo-icon">
-                🍋
-            </div>
-
-            <h1>
-                LemonTrack
-            </h1>
-
-        </div>
+        <div class="register-box">
 
 
-        <div class="subtitle">
-            My Learning Tracker
-        </div>
+            <div class="register-logo">
 
+                <span>🚀</span>
 
-        <nav class="nav">
-
-            <div class="nav-item active"
-                 onclick="showPage('dashboard',this)">
-
-                🏠 Dashboard
+                <h1>LevelUp</h1>
 
             </div>
 
 
-            <div class="nav-item"
-                 onclick="showPage('courses',this)">
-
-                📚 Courses
-
-            </div>
+            <h2>
+                Create your account
+            </h2>
 
 
-            <div class="nav-item"
-                 onclick="showPage('calendar',this)">
-
-                📅 Calendar
-
-            </div>
+            <p>
+                Start your learning journey today.
+            </p>
 
 
-            <div class="nav-item"
-                 onclick="showPage('goals',this)">
+            <!-- NAME -->
 
-                🎯 Goals
-
-            </div>
-
-
-            <div class="nav-item"
-                 onclick="showPage('stats',this)">
-
-                📊 Stats
-
-            </div>
+            <label>
+                Full Name
+            </label>
 
 
-            <div class="nav-item"
-                 onclick="showPage('achievements',this)">
-
-                🏆 Achievements
-
-            </div>
-
-
-            <div class="nav-item"
-                 onclick="showPage('notes',this)">
-
-                📝 Notes
-
-            </div>
-
-        </nav>
+            <input
+                type="text"
+                id="registerName"
+                placeholder="Enter your name"
+            >
 
 
-        <div class="streak-box">
+            <!-- EMAIL -->
 
-            <div class="streak-number">
+            <label>
+                Email
+            </label>
 
-                🔥
-                <span id="sidebarStreak">
-                    0
+
+            <input
+                type="email"
+                id="registerEmail"
+                placeholder="Enter your email"
+            >
+
+
+            <!-- PASSWORD -->
+
+            <label>
+                Password
+            </label>
+
+
+            <input
+                type="password"
+                id="registerPassword"
+                placeholder="Create a password"
+            >
+
+
+            <!-- REGISTER BUTTON -->
+
+            <button
+                class="register-button"
+                onclick="registerUser()">
+
+                Create Account 🚀
+
+            </button>
+
+
+            <!-- ERROR -->
+
+            <p
+                id="registerError"
+                class="error">
+            </p>
+
+
+            <!-- LOGIN LINK -->
+
+            <div class="register-link">
+
+                Already have an account?
+
+                <span onclick="showLogin()">
+                    Login
                 </span>
 
             </div>
 
-            <div class="streak-label">
-                Day Streak
-            </div>
-
         </div>
 
-
-        <div class="quote">
-
-            "Small progress is still progress."
-
-            <span>
-                Keep going!
-            </span>
-
-        </div>
-
-    </aside>
+    </div>
 
 
 
-    <!-- MAIN -->
+    <!-- ==================================================
+         MAIN APPLICATION
+    ================================================== -->
 
-    <main class="main">
-
-
-        <!-- TOP BAR -->
-
-        <div class="topbar">
-
-            <div class="greeting">
-
-                <div style="
-                    display:flex;
-                    align-items:center;
-                    gap:10px;">
-
-                    <button
-                        class="mobile-menu"
-                        onclick="toggleSidebar()">
-
-                        ☰
-
-                    </button>
+    <div id="app">
 
 
-                    <div>
+        <!-- ==================================================
+             SIDEBAR
+        ================================================== -->
 
-                        <h2 id="greetingText">
-                            Hello! 👋
-                        </h2>
+        <aside class="sidebar" id="sidebar">
 
-                        <p>
 
-                            Let's make today
-                            <span>
-                                productive.
-                            </span>
+            <!-- LOGO -->
 
-                        </p>
+            <div class="logo">
 
-                    </div>
+                <span>🚀</span>
 
-                </div>
+                <h1>LevelUp</h1>
 
             </div>
 
 
-            <div class="top-actions">
-
-                <button
-                    class="icon-button"
-                    onclick="openSearch()">
-
-                    🔍
-
-                </button>
+            <p class="subtitle">
+                My Learning Tracker
+            </p>
 
 
-                <button
-                    class="icon-button"
-                    onclick="openNotifications()">
 
-                    🔔
+            <!-- NAVIGATION -->
 
-                </button>
+            <nav>
 
+
+                <!-- DASHBOARD -->
 
                 <div
-                    class="profile-button"
-                    onclick="openProfile()">
+                    class="nav-item active"
+                    onclick="showPage('dashboard', this)">
 
-                    👤
+                    🏠 Dashboard
 
                 </div>
 
-            </div>
 
-        </div>
-
-
-
-        <!-- STATS -->
-
-        <section class="stats-grid">
-
-
-            <div class="stat-card">
-
-                <div class="stat-title">
-                    📈 OVERALL PROGRESS
-                </div>
+                <!-- COURSES -->
 
                 <div
-                    class="stat-number lime-text"
-                    id="overallPercent">
+                    class="nav-item"
+                    onclick="showPage('courses', this)">
 
-                    0%
-
-                </div>
-
-                <div class="stat-description">
-                    Keep moving forward!
-                </div>
-
-                <div class="progress">
-
-                    <div
-                        class="progress-bar"
-                        id="overallBar">
-                    </div>
+                    📚 Courses
 
                 </div>
 
-            </div>
 
-
-            <div class="stat-card">
-
-                <div class="stat-title">
-                    ✓ COMPLETED TOPICS
-                </div>
+                <!-- CALENDAR -->
 
                 <div
-                    class="stat-number"
-                    id="completedTopics">
+                    class="nav-item"
+                    onclick="showPage('calendar', this)">
 
-                    0
-
-                </div>
-
-                <div
-                    class="stat-description"
-                    id="topicCount">
-
-                    out of 0 topics
+                    📅 Calendar
 
                 </div>
-
-            </div>
-
-
-            <div class="stat-card">
-
-                <div class="stat-title">
-                    📚 COURSES
-                </div>
-
-                <div
-                    class="stat-number"
-                    id="courseCount">
-
-                    0
-
-                </div>
-
-                <div class="stat-description">
-                    Active courses
-                </div>
-
-            </div>
-
-
-            <div class="stat-card">
-
-                <div class="stat-title">
-                    🔥 CURRENT STREAK
-                </div>
-
-                <div
-                    class="stat-number lime-text"
-                    id="streak">
-
-                    0
-
-                </div>
-
-                <div class="stat-description">
-                    consecutive days
-                </div>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- DASHBOARD -->
-
-        <section id="dashboardPage">
-
-            <div class="dashboard-grid">
 
 
                 <!-- GOALS -->
 
                 <div
-                    class="card goal-card">
+                    class="nav-item"
+                    onclick="showPage('goals', this)">
 
-                    <div class="card-header">
+                    🎯 Goals
 
-                        <h3>
-                            🎯 Today's Goals
-                        </h3>
-
-                        <span id="goalProgress">
-                            0 / 0
-                        </span>
-
-                    </div>
+                </div>
 
 
-                    <div
-                        id="goalsContainer">
-                    </div>
+                <!-- STATS -->
 
+                <div
+                    class="nav-item"
+                    onclick="showPage('stats', this)">
+
+                    📊 Stats
+
+                </div>
+
+
+                <!-- ACHIEVEMENTS -->
+
+                <div
+                    class="nav-item"
+                    onclick="showPage('achievements', this)">
+
+                    🏆 Achievements
+
+                </div>
+
+
+                <!-- NOTES -->
+
+                <div
+                    class="nav-item"
+                    onclick="showPage('notes', this)">
+
+                    📝 Notes
+
+                </div>
+
+            </nav>
+
+
+
+            <!-- STREAK -->
+
+            <div class="streak-box">
+
+                <div class="streak-number">
+
+                    🔥
+
+                    <span id="sidebarStreak">
+                        0
+                    </span>
+
+                </div>
+
+
+                <p>
+                    Day Streak
+                </p>
+
+            </div>
+
+        </aside>
+
+
+
+        <!-- ==================================================
+             MAIN CONTENT
+        ================================================== -->
+
+        <main class="main">
+
+
+            <!-- ==================================================
+                 TOP BAR
+            ================================================== -->
+
+            <header class="topbar">
+
+
+                <!-- GREETING -->
+
+                <div class="greeting">
+
+                    <h2 id="greetingText">
+
+                        Hello! 👋
+
+                    </h2>
+
+
+                    <p>
+
+                        Let's make today
+                        <strong>productive.</strong>
+
+                    </p>
+
+                </div>
+
+
+
+                <!-- TOP ACTIONS -->
+
+                <div class="top-actions">
+
+
+                    <!-- SEARCH -->
 
                     <button
-                        class="add-button"
-                        onclick="addGoal()">
+                        onclick="openSearch()">
 
-                        ＋ Add New Goal
+                        🔍
+
+                    </button>
+
+
+                    <!-- NOTIFICATIONS -->
+
+                    <button
+                        onclick="openNotifications()">
+
+                        🔔
+
+                    </button>
+
+
+                    <!-- PROFILE -->
+
+                    <button
+                        class="profile-button"
+                        onclick="openProfile()">
+
+                        👤
 
                     </button>
 
                 </div>
 
+            </header>
 
 
-                <!-- CHART -->
 
-                <div class="card">
+            <!-- ==================================================
+                 STATISTICS
+            ================================================== -->
 
-                    <div class="card-header">
+            <section class="stats-grid">
 
-                        <h3>
-                            📈 Learning Progress
-                        </h3>
 
-                    </div>
+                <!-- OVERALL PROGRESS -->
 
+                <div class="stat-card">
 
-                    <div class="chart">
+                    <p>
+                        OVERALL PROGRESS
+                    </p>
 
-                        <svg
-                            viewBox="0 0 600 230"
-                            preserveAspectRatio="none">
 
-                            <line
-                                x1="40"
-                                y1="30"
-                                x2="580"
-                                y2="30"
-                                class="chart-grid"/>
-
-                            <line
-                                x1="40"
-                                y1="85"
-                                x2="580"
-                                y2="85"
-                                class="chart-grid"/>
-
-                            <line
-                                x1="40"
-                                y1="140"
-                                x2="580"
-                                y2="140"
-                                class="chart-grid"/>
-
-                            <line
-                                x1="40"
-                                y1="195"
-                                x2="580"
-                                y2="195"
-                                class="chart-grid"/>
-
-                            <path
-                                id="chartArea"
-                                class="chart-area">
-                            </path>
-
-                            <polyline
-                                id="chartLine"
-                                class="chart-line">
-                            </polyline>
-
-                            <g id="chartDots"></g>
-
-                        </svg>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- COURSES -->
-
-        <section id="coursesPage">
-
-            <div class="section-heading">
-
-                <h2>
-                    Your Courses
-                </h2>
-
-                <button
-                    class="add-course-button"
-                    onclick="openCourseModal()">
-
-                    ＋ Add Course
-
-                </button>
-
-            </div>
-
-
-            <div
-                class="course-grid"
-                id="courseGrid">
-            </div>
-
-        </section>
-
-
-
-        <!-- CALENDAR -->
-
-        <section
-            class="calendar-section"
-            id="calendarPage">
-
-            <div class="card">
-
-                <div class="calendar-header">
-
-                    <button
-                        class="calendar-nav"
-                        onclick="changeMonth(-1)">
-
-                        ←
-
-                    </button>
-
-
-                    <strong
-                        id="calendarTitle">
-                    </strong>
-
-
-                    <button
-                        class="calendar-nav"
-                        onclick="changeMonth(1)">
-
-                        →
-
-                    </button>
-
-                </div>
-
-
-                <div class="calendar-week">
-
-                    <div>Sun</div>
-                    <div>Mon</div>
-                    <div>Tue</div>
-                    <div>Wed</div>
-                    <div>Thu</div>
-                    <div>Fri</div>
-                    <div>Sat</div>
-
-                </div>
-
-
-                <div
-                    class="calendar-grid"
-                    id="calendarGrid">
-                </div>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- NOTES -->
-
-        <section
-            class="notes-section"
-            id="notesPage">
-
-            <div class="section-heading">
-
-                <h2>
-                    📝 My Notes
-                </h2>
-
-                <button
-                    class="add-course-button"
-                    onclick="openNoteModal()">
-
-                    ＋ Add Note
-
-                </button>
-
-            </div>
-
-
-            <div
-                class="notes-grid"
-                id="notesGrid">
-            </div>
-
-        </section>
-
-
-
-        <!-- ACHIEVEMENTS -->
-
-        <section
-            class="achievements-section"
-            id="achievementsPage">
-
-            <div class="card">
-
-                <div class="card-header">
-
-                    <h3>
-                        🏆 My Achievements
-                    </h3>
-
-                </div>
-
-
-                <div
-                    class="achievements"
-                    id="achievementsGrid">
-                </div>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- BOTTOM -->
-
-        <section
-            class="bottom-grid"
-            id="bottomSection">
-
-
-            <div class="card">
-
-                <div class="card-header">
-
-                    <h3>
-                        ⚡ Recent Activity
-                    </h3>
-
-                </div>
-
-                <div
-                    id="activityContainer">
-                </div>
-
-            </div>
-
-
-            <div class="card">
-
-                <div class="card-header">
-
-                    <h3>
-                        🏆 Achievements
-                    </h3>
-
-                </div>
-
-                <div
-                    class="achievements"
-                    id="miniAchievements">
-                </div>
-
-            </div>
-
-        </section>
-
-    </main>
-
-</div>
-
-
-
-<!-- ==================================================
-     COURSE MODAL
-================================================== -->
-
-<div
-    class="modal"
-    id="courseModal">
-
-    <div class="modal-box">
-
-        <div class="modal-header">
-
-            <h2>
-                Add New Course
-            </h2>
-
-            <button
-                class="close-button"
-                onclick="closeModal('courseModal')">
-
-                ×
-
-            </button>
-
-        </div>
-
-
-        <div class="form-group">
-
-            <label>
-                Course Name
-            </label>
-
-            <input
-                id="courseName"
-                placeholder="Example: Backend Development">
-
-        </div>
-
-
-        <button
-            class="submit-button"
-            onclick="createCourse()">
-
-            Create Course
-
-        </button>
-
-    </div>
-
-</div>
-
-
-
-<!-- ==================================================
-     TOPIC MODAL
-================================================== -->
-
-<div
-    class="modal"
-    id="topicModal">
-
-    <div class="modal-box">
-
-        <div class="modal-header">
-
-            <h2 id="topicTitle">
-                Course Topics
-            </h2>
-
-            <button
-                class="close-button"
-                onclick="closeModal('topicModal')">
-
-                ×
-
-            </button>
-
-        </div>
-
-
-        <div id="topicList"></div>
-
-
-        <div class="topic-add">
-
-            <input
-                id="topicInput"
-                placeholder="Add a new topic...">
-
-
-            <button onclick="addTopic()">
-
-                Add
-
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-
-<!-- ==================================================
-     NOTE MODAL
-================================================== -->
-
-<div
-    class="modal"
-    id="noteModal">
-
-    <div class="modal-box">
-
-        <div class="modal-header">
-
-            <h2>
-                Add Note
-            </h2>
-
-            <button
-                class="close-button"
-                onclick="closeModal('noteModal')">
-
-                ×
-
-            </button>
-
-        </div>
-
-
-        <div class="form-group">
-
-            <label>
-                Note Title
-            </label>
-
-            <input
-                id="noteTitle"
-                placeholder="Example: Java OOP">
-
-        </div>
-
-
-        <div class="form-group">
-
-            <label>
-                Note
-            </label>
-
-            <textarea
-                id="noteContent"
-                placeholder="Write your note...">
-            </textarea>
-
-        </div>
-
-
-        <button
-            class="submit-button"
-            onclick="saveNote()">
-
-            Save Note
-
-        </button>
-
-    </div>
-
-</div>
-
-
-
-<!-- ==================================================
-     PROFILE MODAL
-================================================== -->
-
-<div
-    class="modal"
-    id="profileModal">
-
-    <div class="modal-box">
-
-        <div class="modal-header">
-
-            <h2>
-                👤 Profile
-            </h2>
-
-            <button
-                class="close-button"
-                onclick="closeModal('profileModal')">
-
-                ×
-
-            </button>
-
-        </div>
-
-
-        <div class="form-group">
-
-            <label>
-                Your Name
-            </label>
-
-            <input
-                id="profileName"
-                placeholder="Your name">
-
-        </div>
-
-
-        <button
-            class="submit-button"
-            onclick="saveProfile()">
-
-            Save Name
-
-        </button>
-
-
-        <button
-            onclick="logout()"
-            style="
-                width:100%;
-                padding:12px;
-                margin-top:10px;
-                border-radius:8px;
-                background:#fff0ef;
-                color:#e74c3c;
-                font-weight:bold;">
-
-            Logout
-
-        </button>
-
-    </div>
-
-</div>
-
-
-
-<!-- ==================================================
-     JAVASCRIPT
-================================================== -->
-
-<script>
-
-
-/* ==========================================
-   DATA
-========================================== */
-
-let courses =
-    JSON.parse(
-        localStorage.getItem(
-            "lemon_courses"
-        )
-    ) || [
-
-        {
-            id: 1,
-
-            name: "DSA",
-
-            icon: "💻",
-
-            topics: [
-
-                {
-                    id: 101,
-                    name: "Arrays",
-                    completed: true
-                },
-
-                {
-                    id: 102,
-                    name: "Strings",
-                    completed: true
-                },
-
-                {
-                    id: 103,
-                    name: "Linked List",
-                    completed: false
-                },
-
-                {
-                    id: 104,
-                    name: "Stack",
-                    completed: false
-                }
-
-            ]
-
-        },
-
-        {
-            id: 2,
-
-            name: "Java",
-
-            icon: "☕",
-
-            topics: [
-
-                {
-                    id: 201,
-                    name: "Java Fundamentals",
-                    completed: true
-                },
-
-                {
-                    id: 202,
-                    name: "OOP",
-                    completed: true
-                },
-
-                {
-                    id: 203,
-                    name: "Collections",
-                    completed: false
-                }
-
-            ]
-
-        },
-
-        {
-            id: 3,
-
-            name: "Core CS",
-
-            icon: "🖥️",
-
-            topics: [
-
-                {
-                    id: 301,
-                    name: "Operating Systems",
-                    completed: false
-                },
-
-                {
-                    id: 302,
-                    name: "DBMS",
-                    completed: false
-                }
-
-            ]
-
-        }
-
-    ];
-
-
-let goals =
-    JSON.parse(
-        localStorage.getItem(
-            "lemon_goals"
-        )
-    ) || [];
-
-
-let activities =
-    JSON.parse(
-        localStorage.getItem(
-            "lemon_activities"
-        )
-    ) || [];
-
-
-let notes =
-    JSON.parse(
-        localStorage.getItem(
-            "lemon_notes"
-        )
-    ) || [];
-
-
-let currentCourseId = null;
-
-let editingNoteId = null;
-
-let calendarDate = new Date();
-
-
-
-/* ==========================================
-   LOGIN
-========================================== */
-
-function login() {
-
-    const name =
-        document
-            .getElementById(
-                "loginName"
-            )
-            .value
-            .trim();
-
-
-    const email =
-        document
-            .getElementById(
-                "loginEmail"
-            )
-            .value
-            .trim();
-
-
-    const error =
-        document.getElementById(
-            "loginError"
-        );
-
-
-    if (!name) {
-
-        error.style.display =
-            "block";
-
-        return;
-    }
-
-
-    error.style.display =
-        "none";
-
-
-    localStorage.setItem(
-        "lemon_logged_in",
-        "true"
-    );
-
-
-    localStorage.setItem(
-        "lemon_profile",
-        name
-    );
-
-
-    if (email) {
-
-        localStorage.setItem(
-            "lemon_email",
-            email
-        );
-
-    }
-
-
-    showApplication();
-
-}
-
-
-
-/* ==========================================
-   SHOW APP
-========================================== */
-
-function showApplication() {
-
-    document.getElementById(
-        "loginPage"
-    ).style.display =
-        "none";
-
-
-    document.getElementById(
-        "app"
-    ).style.display =
-        "block";
-
-
-    updateGreeting();
-
-    renderAll();
-
-}
-
-
-
-/* ==========================================
-   CHECK LOGIN
-========================================== */
-
-function checkLogin() {
-
-    const loggedIn =
-        localStorage.getItem(
-            "lemon_logged_in"
-        );
-
-
-    if (
-        loggedIn === "true"
-    ) {
-
-        showApplication();
-
-    } else {
-
-        document.getElementById(
-            "loginPage"
-        ).style.display =
-            "flex";
-
-
-        document.getElementById(
-            "app"
-        ).style.display =
-            "none";
-
-    }
-
-}
-
-
-
-/* ==========================================
-   GREETING
-========================================== */
-
-function updateGreeting() {
-
-    const name =
-        localStorage.getItem(
-            "lemon_profile"
-        );
-
-
-    const greeting =
-        document.getElementById(
-            "greetingText"
-        );
-
-
-    if (name) {
-
-        greeting.innerHTML =
-            `Hello, ${escapeHTML(name)}! 👋`;
-
-    }
-
-}
-
-
-
-/* ==========================================
-   PROFILE
-========================================== */
-
-function openProfile() {
-
-    const name =
-        localStorage.getItem(
-            "lemon_profile"
-        ) || "";
-
-
-    document.getElementById(
-        "profileName"
-    ).value =
-        name;
-
-
-    document.getElementById(
-        "profileModal"
-    ).classList.add(
-        "show"
-    );
-
-}
-
-
-function saveProfile() {
-
-    const name =
-        document.getElementById(
-            "profileName"
-        ).value
-        .trim();
-
-
-    if (!name) {
-
-        return;
-
-    }
-
-
-    localStorage.setItem(
-        "lemon_profile",
-        name
-    );
-
-
-    updateGreeting();
-
-
-    closeModal(
-        "profileModal"
-    );
-
-}
-
-
-
-/* ==========================================
-   LOGOUT
-========================================== */
-
-function logout() {
-
-    const confirmLogout =
-        confirm(
-            "Are you sure you want to logout?"
-        );
-
-
-    if (!confirmLogout) {
-
-        return;
-
-    }
-
-
-    localStorage.removeItem(
-        "lemon_logged_in"
-    );
-
-
-    closeModal(
-        "profileModal"
-    );
-
-
-    document.getElementById(
-        "app"
-    ).style.display =
-        "none";
-
-
-    document.getElementById(
-        "loginPage"
-    ).style.display =
-        "flex";
-
-
-    document.getElementById(
-        "loginName"
-    ).value =
-        localStorage.getItem(
-            "lemon_profile"
-        ) || "";
-
-}
-
-
-
-/* ==========================================
-   SAVE DATA
-========================================== */
-
-function saveData() {
-
-    localStorage.setItem(
-        "lemon_courses",
-        JSON.stringify(courses)
-    );
-
-
-    localStorage.setItem(
-        "lemon_goals",
-        JSON.stringify(goals)
-    );
-
-
-    localStorage.setItem(
-        "lemon_activities",
-        JSON.stringify(activities)
-    );
-
-
-    localStorage.setItem(
-        "lemon_notes",
-        JSON.stringify(notes)
-    );
-
-}
-
-
-
-/* ==========================================
-   STATS
-========================================== */
-
-function calculateStats() {
-
-    let total = 0;
-
-    let completed = 0;
-
-
-    courses.forEach(
-        course => {
-
-            total +=
-                course.topics.length;
-
-
-            completed +=
-                course.topics.filter(
-                    topic =>
-                        topic.completed
-                ).length;
-
-        }
-    );
-
-
-    const percentage =
-        total === 0
-            ? 0
-            : Math.round(
-                completed /
-                total *
-                100
-            );
-
-
-    return {
-
-        total,
-
-        completed,
-
-        percentage
-
-    };
-
-}
-
-
-
-/* ==========================================
-   RENDER STATS
-========================================== */
-
-function renderStats() {
-
-    const stats =
-        calculateStats();
-
-
-    document.getElementById(
-        "overallPercent"
-    ).textContent =
-        stats.percentage + "%";
-
-
-    document.getElementById(
-        "overallBar"
-    ).style.width =
-        stats.percentage + "%";
-
-
-    document.getElementById(
-        "completedTopics"
-    ).textContent =
-        stats.completed;
-
-
-    document.getElementById(
-        "topicCount"
-    ).textContent =
-        "out of " +
-        stats.total +
-        " topics";
-
-
-    document.getElementById(
-        "courseCount"
-    ).textContent =
-        courses.length;
-
-
-    const streak =
-        calculateStreak();
-
-
-    document.getElementById(
-        "streak"
-    ).textContent =
-        streak;
-
-
-    document.getElementById(
-        "sidebarStreak"
-    ).textContent =
-        streak;
-
-
-    renderChart();
-
-}
-
-
-
-/* ==========================================
-   COURSES
-========================================== */
-
-function renderCourses() {
-
-    const container =
-        document.getElementById(
-            "courseGrid"
-        );
-
-
-    container.innerHTML =
-        "";
-
-
-    courses.forEach(
-        course => {
-
-            const total =
-                course.topics.length;
-
-
-            const completed =
-                course.topics.filter(
-                    topic =>
-                        topic.completed
-                ).length;
-
-
-            const percentage =
-                total === 0
-                    ? 0
-                    : Math.round(
-                        completed /
-                        total *
-                        100
-                    );
-
-
-            container.innerHTML += `
-
-                <div class="course-card">
-
-                    <div class="course-top">
-
-                        <div class="course-icon">
-                            ${course.icon}
-                        </div>
-
-
-                        <div class="course-info">
-
-                            <h3>
-                                ${escapeHTML(course.name)}
-                            </h3>
-
-                            <p>
-                                ${completed}
-                                /
-                                ${total}
-                                topics completed
-                            </p>
-
-                        </div>
-
-
-                        <div class="course-percent">
-
-                            ${percentage}%
-
-                        </div>
-
-                    </div>
+                    <h2 id="overallPercent">
+                        0%
+                    </h2>
 
 
                     <div class="progress">
 
                         <div
                             class="progress-bar"
-                            style="
-                                width:
-                                ${percentage}%">
+                            id="overallBar">
                         </div>
 
                     </div>
 
+                </div>
 
-                    <div class="course-actions">
+
+
+                <!-- TOPICS -->
+
+                <div class="stat-card">
+
+                    <p>
+                        COMPLETED TOPICS
+                    </p>
+
+
+                    <h2 id="completedTopics">
+                        0
+                    </h2>
+
+
+                    <small id="topicCount">
+                        out of 0 topics
+                    </small>
+
+                </div>
+
+
+
+                <!-- COURSES -->
+
+                <div class="stat-card">
+
+                    <p>
+                        COURSES
+                    </p>
+
+
+                    <h2 id="courseCount">
+                        0
+                    </h2>
+
+
+                    <small>
+                        Active courses
+                    </small>
+
+                </div>
+
+
+
+                <!-- STREAK -->
+
+                <div class="stat-card">
+
+                    <p>
+                        CURRENT STREAK
+                    </p>
+
+
+                    <h2 id="streak">
+                        0
+                    </h2>
+
+
+                    <small>
+                        consecutive days
+                    </small>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ==================================================
+                 DASHBOARD
+            ================================================== -->
+
+            <section id="dashboardPage">
+
+
+                <div class="dashboard-grid">
+
+
+                    <!-- TODAY'S GOALS -->
+
+                    <div class="card goal-card">
+
+
+                        <div class="card-header">
+
+                            <h3>
+                                🎯 Today's Goals
+                            </h3>
+
+
+                            <span id="goalProgress">
+                                0 / 0
+                            </span>
+
+                        </div>
+
+
+                        <div
+                            id="goalsContainer">
+                        </div>
+
 
                         <button
-                            class="view-button"
-                            onclick="
-                                openTopics(
-                                    ${course.id}
-                                )
-                            ">
+                            class="add-button"
+                            onclick="addGoal()">
 
-                            View Topics
-
-                        </button>
-
-
-                        <button
-                            class="delete-button"
-                            onclick="
-                                deleteCourse(
-                                    ${course.id}
-                                )
-                            ">
-
-                            Delete
+                            ＋ Add New Goal
 
                         </button>
 
                     </div>
 
+
+
+                    <!-- PROGRESS CHART -->
+
+                    <div class="card">
+
+
+                        <div class="card-header">
+
+                            <h3>
+                                📈 Learning Progress
+                            </h3>
+
+                        </div>
+
+
+                        <div class="chart">
+
+
+                            <svg
+                                viewBox="0 0 600 230">
+
+
+                                <polyline
+                                    id="chartLine"
+                                    class="chart-line">
+                                </polyline>
+
+
+                            </svg>
+
+
+                        </div>
+
+                    </div>
+
                 </div>
-            `;
-        }
-    );
 
-}
+            </section>
 
 
 
-/* ==========================================
-   COURSE MODAL
-========================================== */
+            <!-- ==================================================
+                 COURSES
+            ================================================== -->
 
-function openCourseModal() {
+            <section id="coursesPage">
 
-    document.getElementById(
-        "courseName"
-    ).value =
-        "";
 
+                <div class="section-heading">
 
-    document.getElementById(
-        "courseModal"
-    ).classList.add(
-        "show"
-    );
 
-}
-
-
-function createCourse() {
-
-    const input =
-        document.getElementById(
-            "courseName"
-        );
-
-
-    const name =
-        input.value.trim();
-
-
-    if (!name) {
-
-        alert(
-            "Please enter course name."
-        );
-
-        return;
-
-    }
-
-
-    courses.push({
-
-        id: Date.now(),
-
-        name: name,
-
-        icon: "📚",
-
-        topics: []
-
-    });
-
-
-    saveData();
-
-    closeModal(
-        "courseModal"
-    );
-
-    renderAll();
-
-}
-
-
-
-/* ==========================================
-   DELETE COURSE
-========================================== */
-
-function deleteCourse(id) {
-
-    if (
-        !confirm(
-            "Delete this course?"
-        )
-    ) {
-
-        return;
-
-    }
-
-
-    courses =
-        courses.filter(
-            course =>
-                course.id !== id
-        );
-
-
-    saveData();
-
-    renderAll();
-
-}
-
-
-
-/* ==========================================
-   TOPICS
-========================================== */
-
-function openTopics(id) {
-
-    currentCourseId =
-        id;
-
-
-    const course =
-        courses.find(
-            c =>
-                c.id === id
-        );
-
-
-    document.getElementById(
-        "topicTitle"
-    ).textContent =
-        course.name;
-
-
-    renderTopics();
-
-
-    document.getElementById(
-        "topicModal"
-    ).classList.add(
-        "show"
-    );
-
-}
-
-
-function renderTopics() {
-
-    const course =
-        courses.find(
-            c =>
-                c.id ===
-                currentCourseId
-        );
-
-
-    const list =
-        document.getElementById(
-            "topicList"
-        );
-
-
-    list.innerHTML =
-        "";
-
-
-    course.topics.forEach(
-        topic => {
-
-            list.innerHTML += `
-
-                <div class="topic
-                    ${
-                        topic.completed
-                        ? "completed"
-                        : ""
-                    }">
-
-                    <input
-                        type="checkbox"
-                        ${
-                            topic.completed
-                            ? "checked"
-                            : ""
-                        }
-                        onchange="
-                            toggleTopic(
-                                ${course.id},
-                                ${topic.id}
-                            )
-                        ">
-
-
-                    <span class="topic-name">
-
-                        ${escapeHTML(
-                            topic.name
-                        )}
-
-                    </span>
+                    <h2>
+                        Your Courses
+                    </h2>
 
 
                     <button
-                        class="topic-delete"
-                        onclick="
-                            deleteTopic(
-                                ${course.id},
-                                ${topic.id}
-                            )
-                        ">
+                        onclick="openCourseModal()">
 
-                        Delete
+                        ＋ Add Course
 
                     </button>
 
                 </div>
 
-            `;
 
-        }
-    );
-
-}
-
-
-function addTopic() {
-
-    const input =
-        document.getElementById(
-            "topicInput"
-        );
-
-
-    const name =
-        input.value.trim();
-
-
-    if (!name) {
-
-        return;
-
-    }
-
-
-    const course =
-        courses.find(
-            c =>
-                c.id ===
-                currentCourseId
-        );
-
-
-    course.topics.push({
-
-        id: Date.now(),
-
-        name: name,
-
-        completed: false
-
-    });
-
-
-    input.value =
-        "";
-
-
-    saveData();
-
-    renderTopics();
-
-    renderAll();
-
-}
-
-
-function toggleTopic(
-    courseId,
-    topicId
-) {
-
-    const course =
-        courses.find(
-            c =>
-                c.id ===
-                courseId
-        );
-
-
-    const topic =
-        course.topics.find(
-            t =>
-                t.id ===
-                topicId
-        );
-
-
-    topic.completed =
-        !topic.completed;
-
-
-    if (
-        topic.completed
-    ) {
-
-        addActivity(
-            "Completed " +
-            topic.name +
-            " in " +
-            course.name
-        );
-
-    }
-
-
-    saveData();
-
-    renderTopics();
-
-    renderAll();
-
-}
-
-
-function deleteTopic(
-    courseId,
-    topicId
-) {
-
-    const course =
-        courses.find(
-            c =>
-                c.id ===
-                courseId
-        );
-
-
-    course.topics =
-        course.topics.filter(
-            topic =>
-                topic.id !==
-                topicId
-        );
-
-
-    saveData();
-
-    renderTopics();
-
-    renderAll();
-
-}
-
-
-
-/* ==========================================
-   GOALS
-========================================== */
-
-function renderGoals() {
-
-    const container =
-        document.getElementById(
-            "goalsContainer"
-        );
-
-
-    container.innerHTML =
-        "";
-
-
-    goals.forEach(
-        goal => {
-
-            container.innerHTML += `
-
-                <div class="goal
-                    ${
-                        goal.completed
-                        ? "completed"
-                        : ""
-                    }">
-
-                    <input
-                        type="checkbox"
-                        ${
-                            goal.completed
-                            ? "checked"
-                            : ""
-                        }
-                        onchange="
-                            toggleGoal(
-                                ${goal.id}
-                            )
-                        ">
-
-
-                    <span class="goal-name">
-
-                        ${escapeHTML(
-                            goal.name
-                        )}
-
-                    </span>
-
-
-                    <span class="goal-status">
-
-                        ${
-                            goal.completed
-                            ? "Completed"
-                            : "Pending"
-                        }
-
-                    </span>
+                <div
+                    class="course-grid"
+                    id="courseGrid">
 
                 </div>
 
-            `;
-
-        }
-    );
-
-
-    const completed =
-        goals.filter(
-            goal =>
-                goal.completed
-        ).length;
-
-
-    document.getElementById(
-        "goalProgress"
-    ).textContent =
-        completed +
-        " / " +
-        goals.length;
-
-}
-
-
-function addGoal() {
-
-    const name =
-        prompt(
-            "Enter today's goal:"
-        );
-
-
-    if (
-        !name ||
-        !name.trim()
-    ) {
-
-        return;
-
-    }
-
-
-    goals.push({
-
-        id: Date.now(),
-
-        name: name.trim(),
-
-        completed: false
-
-    });
-
-
-    saveData();
-
-    renderGoals();
-
-}
-
-
-function toggleGoal(id) {
-
-    const goal =
-        goals.find(
-            g =>
-                g.id === id
-        );
-
-
-    goal.completed =
-        !goal.completed;
-
-
-    if (
-        goal.completed
-    ) {
-
-        addActivity(
-            "Completed goal: " +
-            goal.name
-        );
-
-    }
-
-
-    saveData();
-
-    renderAll();
-
-}
+            </section>
 
 
 
-/* ==========================================
-   ACTIVITY
-========================================== */
+            <!-- ==================================================
+                 CALENDAR
+            ================================================== -->
 
-function addActivity(text) {
-
-    activities.unshift({
-
-        id: Date.now(),
-
-        text: text,
-
-        date:
-            new Date()
-                .toISOString()
-
-    });
+            <section
+                id="calendarPage"
+                class="page-section">
 
 
-    activities =
-        activities.slice(
-            0,
-            50
-        );
+                <div class="card">
 
 
-    saveData();
-
-}
+                    <div class="calendar-header">
 
 
-function renderActivities() {
+                        <button
+                            onclick="changeMonth(-1)">
 
-    const container =
-        document.getElementById(
-            "activityContainer"
-        );
+                            ←
 
-
-    container.innerHTML =
-        "";
+                        </button>
 
 
-    activities
-        .slice(0,8)
-        .forEach(
-            activity => {
+                        <h2
+                            id="calendarTitle">
 
-                const date =
-                    new Date(
-                        activity.date
-                    );
+                        </h2>
 
 
-                container.innerHTML += `
+                        <button
+                            onclick="changeMonth(1)">
 
-                    <div class="activity">
+                            →
 
-                        <div class="activity-icon">
-                            ✓
+                        </button>
+
+                    </div>
+
+
+
+                    <!-- DAYS -->
+
+                    <div class="calendar-week">
+
+
+                        <span>
+                            Sun
+                        </span>
+
+
+                        <span>
+                            Mon
+                        </span>
+
+
+                        <span>
+                            Tue
+                        </span>
+
+
+                        <span>
+                            Wed
+                        </span>
+
+
+                        <span>
+                            Thu
+                        </span>
+
+
+                        <span>
+                            Fri
+                        </span>
+
+
+                        <span>
+                            Sat
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- CALENDAR -->
+
+                    <div
+                        id="calendarGrid"
+                        class="calendar-grid">
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ==================================================
+                 GOALS PAGE
+            ================================================== -->
+
+            <section
+                id="goalsPage"
+                class="page-section">
+
+
+                <div class="card">
+
+
+                    <div class="section-heading">
+
+                        <h2>
+                            🎯 My Goals
+                        </h2>
+
+
+                        <button
+                            onclick="addGoal()">
+
+                            ＋ Add Goal
+
+                        </button>
+
+                    </div>
+
+
+                    <div
+                        id="goalsPageContainer">
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ==================================================
+                 STATS PAGE
+            ================================================== -->
+
+            <section
+                id="statsPage"
+                class="page-section">
+
+
+                <div class="card">
+
+
+                    <h2>
+                        📊 My Statistics
+                    </h2>
+
+
+                    <div
+                        class="stats-grid">
+
+                        <div class="stat-card">
+
+                            <p>
+                                OVERALL PROGRESS
+                            </p>
+
+
+                            <h2
+                                id="statsOverall">
+                                0%
+                            </h2>
+
                         </div>
 
 
-                        <div>
+                        <div class="stat-card">
 
-                            <div class="activity-text">
-
-                                ${escapeHTML(
-                                    activity.text
-                                )}
-
-                            </div>
+                            <p>
+                                TOPICS COMPLETED
+                            </p>
 
 
-                            <div class="activity-time">
+                            <h2
+                                id="statsTopics">
+                                0
+                            </h2>
 
-                                ${date.toLocaleString()}
+                        </div>
 
-                            </div>
+
+                        <div class="stat-card">
+
+                            <p>
+                                COURSES
+                            </p>
+
+
+                            <h2
+                                id="statsCourses">
+                                0
+                            </h2>
+
+                        </div>
+
+
+                        <div class="stat-card">
+
+                            <p>
+                                DAY STREAK
+                            </p>
+
+
+                            <h2
+                                id="statsStreak">
+                                0
+                            </h2>
 
                         </div>
 
                     </div>
 
-                `;
+                </div>
 
-            }
-        );
+            </section>
 
-}
 
 
+            <!-- ==================================================
+                 NOTES
+            ================================================== -->
 
-/* ==========================================
-   STREAK
-========================================== */
+            <section
+                id="notesPage"
+                class="page-section">
 
-function calculateStreak() {
 
-    if (
-        activities.length === 0
-    ) {
+                <div class="section-heading">
 
-        return 0;
 
-    }
+                    <h2>
+                        📝 My Notes
+                    </h2>
 
 
-    const dates =
-        [
-            ...new Set(
-                activities.map(
-                    activity =>
-                        new Date(
-                            activity.date
-                        ).toDateString()
-                )
-            )
-        ];
+                    <button
+                        onclick="openNoteModal()">
 
+                        ＋ Add Note
 
-    let streak = 0;
+                    </button>
 
+                </div>
 
-    const today =
-        new Date();
 
+                <div
+                    id="notesGrid"
+                    class="notes-grid">
 
-    today.setHours(
-        0,
-        0,
-        0,
-        0
-    );
+                </div>
 
+            </section>
 
-    for (
-        let i = 0;
-        i < 365;
-        i++
-    ) {
 
-        const date =
-            new Date(today);
 
+            <!-- ==================================================
+                 ACHIEVEMENTS
+            ================================================== -->
 
-        date.setDate(
-            today.getDate() -
-            i
-        );
+            <section
+                id="achievementsPage"
+                class="page-section">
 
 
-        if (
-            dates.includes(
-                date.toDateString()
-            )
-        ) {
+                <div class="card">
 
-            streak++;
 
-        } else {
+                    <h2>
+                        🏆 My Achievements
+                    </h2>
 
-            break;
 
-        }
+                    <div
+                        id="achievementsGrid"
+                        class="achievements">
 
-    }
+                    </div>
 
+                </div>
 
-    return streak;
+            </section>
 
-}
 
 
+            <!-- ==================================================
+                 RECENT ACTIVITY
+            ================================================== -->
 
-/* ==========================================
-   ACHIEVEMENTS
-========================================== */
+            <section class="bottom-grid">
 
-function getAchievements() {
 
-    const stats =
-        calculateStats();
+                <!-- ACTIVITY -->
 
+                <div class="card">
 
-    const streak =
-        calculateStreak();
-
-
-    return [
-
-        {
-            icon: "🌱",
-            name: "First Step",
-            unlocked:
-                stats.completed >= 1
-        },
-
-        {
-            icon: "🚀",
-            name: "50% Complete",
-            unlocked:
-                stats.percentage >= 50
-        },
-
-        {
-            icon: "🔥",
-            name: "7 Day Warrior",
-            unlocked:
-                streak >= 7
-        },
-
-        {
-            icon: "💯",
-            name: "100 Topics",
-            unlocked:
-                stats.completed >= 100
-        }
-
-    ];
-
-}
-
-
-function renderAchievements() {
-
-    const achievements =
-        getAchievements();
-
-
-    const containers = [
-
-        document.getElementById(
-            "achievementsGrid"
-        ),
-
-        document.getElementById(
-            "miniAchievements"
-        )
-
-    ];
-
-
-    containers.forEach(
-        container => {
-
-            container.innerHTML =
-                "";
-
-
-            achievements.forEach(
-                achievement => {
-
-                    container.innerHTML += `
-
-                        <div class="
-                            achievement
-                            ${
-                                achievement.unlocked
-                                ? "unlocked"
-                                : ""
-                            }">
-
-                            <div class="badge">
-
-                                ${achievement.icon}
-
-                            </div>
-
-
-                            <h4>
-
-                                ${achievement.name}
-
-                            </h4>
-
-                        </div>
-
-                    `;
-
-                }
-            );
-
-        }
-    );
-
-}
-
-
-
-/* ==========================================
-   CHART
-========================================== */
-
-function renderChart() {
-
-    const percentage =
-        calculateStats()
-            .percentage;
-
-
-    const values = [
-
-        Math.max(
-            5,
-            percentage - 40
-        ),
-
-        Math.max(
-            8,
-            percentage - 30
-        ),
-
-        Math.max(
-            12,
-            percentage - 25
-        ),
-
-        Math.max(
-            18,
-            percentage - 18
-        ),
-
-        Math.max(
-            25,
-            percentage - 12
-        ),
-
-        Math.max(
-            35,
-            percentage - 5
-        ),
-
-        percentage
-
-    ];
-
-
-    const points =
-        values.map(
-            (value,index) => {
-
-                const x =
-                    40 +
-                    index * 90;
-
-
-                const y =
-                    195 -
-                    value * 1.65;
-
-
-                return `${x},${y}`;
-
-            }
-        );
-
-
-    document.getElementById(
-        "chartLine"
-    ).setAttribute(
-        "points",
-        points.join(" ")
-    );
-
-
-    document.getElementById(
-        "chartArea"
-    ).setAttribute(
-        "d",
-        "M 40,195 L " +
-        points.join(" L ") +
-        " L 580,195 Z"
-    );
-
-
-    const dots =
-        document.getElementById(
-            "chartDots"
-        );
-
-
-    dots.innerHTML =
-        "";
-
-
-    points.forEach(
-        point => {
-
-            const [
-                x,
-                y
-            ] =
-                point.split(",");
-
-
-            dots.innerHTML += `
-
-                <circle
-                    class="chart-dot"
-                    cx="${x}"
-                    cy="${y}"
-                    r="4">
-                </circle>
-
-            `;
-
-        }
-    );
-
-}
-
-
-
-/* ==========================================
-   NOTES
-========================================== */
-
-function renderNotes() {
-
-    const grid =
-        document.getElementById(
-            "notesGrid"
-        );
-
-
-    grid.innerHTML =
-        "";
-
-
-    notes.forEach(
-        note => {
-
-            grid.innerHTML += `
-
-                <div class="note">
 
                     <h3>
-
-                        ${escapeHTML(
-                            note.title
-                        )}
-
+                        ⚡ Recent Activity
                     </h3>
 
 
-                    <p>
-
-                        ${escapeHTML(
-                            note.content
-                        )}
-
-                    </p>
-
-
-                    <div class="note-actions">
-
-                        <button
-                            onclick="
-                                editNote(
-                                    ${note.id}
-                                )
-                            ">
-
-                            Edit
-
-                        </button>
-
-
-                        <button
-                            onclick="
-                                deleteNote(
-                                    ${note.id}
-                                )
-                            ">
-
-                            Delete
-
-                        </button>
+                    <div
+                        id="activityContainer">
 
                     </div>
 
                 </div>
 
-            `;
 
-        }
-    );
 
-}
+                <!-- ACHIEVEMENTS -->
 
+                <div class="card">
 
-function openNoteModal(
-    id = null
-) {
 
-    editingNoteId =
-        id;
+                    <h3>
+                        🏆 Achievements
+                    </h3>
 
 
-    document.getElementById(
-        "noteTitle"
-    ).value =
-        "";
+                    <div
+                        id="miniAchievements"
+                        class="achievements">
 
+                    </div>
 
-    document.getElementById(
-        "noteContent"
-    ).value =
-        "";
+                </div>
 
+            </section>
 
-    if (
-        id !== null
-    ) {
+        </main>
 
-        const note =
-            notes.find(
-                n =>
-                    n.id === id
-            );
+    </div>
 
 
-        document.getElementById(
-            "noteTitle"
-        ).value =
-            note.title;
 
+    <!-- ==================================================
+         COURSE MODAL
+    ================================================== -->
 
-        document.getElementById(
-            "noteContent"
-        ).value =
-            note.content;
+    <div
+        class="modal"
+        id="courseModal">
 
-    }
 
+        <div class="modal-box">
 
-    document.getElementById(
-        "noteModal"
-    ).classList.add(
-        "show"
-    );
 
-}
+            <div class="modal-header">
 
 
-function saveNote() {
+                <h2>
+                    Add New Course
+                </h2>
 
-    const title =
-        document.getElementById(
-            "noteTitle"
-        ).value.trim();
 
+                <button
+                    onclick="closeModal('courseModal')">
 
-    const content =
-        document.getElementById(
-            "noteContent"
-        ).value.trim();
+                    ×
 
-
-    if (
-        !title ||
-        !content
-    ) {
-
-        alert(
-            "Please enter title and note."
-        );
-
-        return;
-
-    }
-
-
-    if (
-        editingNoteId !== null
-    ) {
-
-        const note =
-            notes.find(
-                n =>
-                    n.id ===
-                    editingNoteId
-            );
-
-
-        note.title =
-            title;
-
-
-        note.content =
-            content;
-
-    } else {
-
-        notes.push({
-
-            id: Date.now(),
-
-            title: title,
-
-            content: content
-
-        });
-
-    }
-
-
-    saveData();
-
-    closeModal(
-        "noteModal"
-    );
-
-    renderNotes();
-
-}
-
-
-function editNote(id) {
-
-    openNoteModal(id);
-
-}
-
-
-function deleteNote(id) {
-
-    notes =
-        notes.filter(
-            note =>
-                note.id !== id
-        );
-
-
-    saveData();
-
-    renderNotes();
-
-}
-
-
-
-/* ==========================================
-   CALENDAR
-========================================== */
-
-function renderCalendar() {
-
-    const year =
-        calendarDate.getFullYear();
-
-
-    const month =
-        calendarDate.getMonth();
-
-
-    document.getElementById(
-        "calendarTitle"
-    ).textContent =
-        calendarDate.toLocaleString(
-            "default",
-            {
-                month:"long",
-                year:"numeric"
-            }
-        );
-
-
-    const grid =
-        document.getElementById(
-            "calendarGrid"
-        );
-
-
-    grid.innerHTML =
-        "";
-
-
-    const first =
-        new Date(
-            year,
-            month,
-            1
-        ).getDay();
-
-
-    const days =
-        new Date(
-            year,
-            month + 1,
-            0
-        ).getDate();
-
-
-    for (
-        let i=0;
-        i<first;
-        i++
-    ) {
-
-        grid.innerHTML +=
-            `<div></div>`;
-
-    }
-
-
-    for (
-        let day=1;
-        day<=days;
-        day++
-    ) {
-
-        const date =
-            new Date(
-                year,
-                month,
-                day
-            );
-
-
-        const studied =
-            activities.some(
-                activity =>
-                    new Date(
-                        activity.date
-                    ).toDateString()
-                    ===
-                    date.toDateString()
-            );
-
-
-        const today =
-            new Date()
-                .toDateString()
-                ===
-                date.toDateString();
-
-
-        grid.innerHTML += `
-
-            <div class="
-                calendar-day
-                ${
-                    studied
-                    ? "active"
-                    : ""
-                }
-                ${
-                    today
-                    ? "today"
-                    : ""
-                }">
-
-                ${day}
-
-                ${
-                    studied
-                    ? "<br><small>✓ Studied</small>"
-                    : ""
-                }
+                </button>
 
             </div>
 
-        `;
 
-    }
+            <label>
+                Course Name
+            </label>
 
-}
 
+            <input
+                id="courseName"
+                placeholder="Example: Backend Development"
+            >
 
-function changeMonth(
-    amount
-) {
 
-    calendarDate.setMonth(
-        calendarDate.getMonth()
-        + amount
-    );
+            <button
+                class="submit-button"
+                onclick="createCourse()">
 
+                Create Course
 
-    renderCalendar();
+            </button>
 
-}
+        </div>
 
+    </div>
 
 
-/* ==========================================
-   PAGE NAVIGATION
-========================================== */
 
-function showPage(
-    page,
-    item
-) {
+    <!-- ==================================================
+         TOPIC MODAL
+    ================================================== -->
 
-    document.getElementById(
-        "dashboardPage"
-    ).style.display =
-        "none";
+    <div
+        class="modal"
+        id="topicModal">
 
 
-    document.getElementById(
-        "coursesPage"
-    ).style.display =
-        "none";
+        <div class="modal-box">
 
 
-    document.getElementById(
-        "calendarPage"
-    ).style.display =
-        "none";
+            <div class="modal-header">
 
 
-    document.getElementById(
-        "notesPage"
-    ).style.display =
-        "none";
+                <h2 id="topicTitle">
+                    Course Topics
+                </h2>
 
 
-    document.getElementById(
-        "achievementsPage"
-    ).style.display =
-        "none";
+                <button
+                    onclick="closeModal('topicModal')">
 
+                    ×
 
-    document.getElementById(
-        "bottomSection"
-    ).style.display =
-        "none";
+                </button>
 
+            </div>
 
-    if (
-        page ===
-        "dashboard"
-    ) {
 
-        document.getElementById(
-            "dashboardPage"
-        ).style.display =
-            "block";
+            <div
+                id="topicList">
 
+            </div>
 
-        document.getElementById(
-            "coursesPage"
-        ).style.display =
-            "block";
 
+            <div class="topic-add">
 
-        document.getElementById(
-            "bottomSection"
-        ).style.display =
-            "grid";
 
-    }
+                <input
+                    id="topicInput"
+                    placeholder="Add a topic..."
+                >
 
 
-    if (
-        page ===
-        "courses"
-    ) {
+                <button
+                    onclick="addTopic()">
 
-        document.getElementById(
-            "coursesPage"
-        ).style.display =
-            "block";
+                    Add
 
-    }
+                </button>
 
+            </div>
 
-    if (
-        page ===
-        "calendar"
-    ) {
+        </div>
 
-        document.getElementById(
-            "calendarPage"
-        ).style.display =
-            "block";
+    </div>
 
 
-        renderCalendar();
 
-    }
+    <!-- ==================================================
+         NOTE MODAL
+    ================================================== -->
 
+    <div
+        class="modal"
+        id="noteModal">
 
-    if (
-        page ===
-        "notes"
-    ) {
 
-        document.getElementById(
-            "notesPage"
-        ).style.display =
-            "block";
+        <div class="modal-box">
 
 
-        renderNotes();
+            <div class="modal-header">
 
-    }
 
+                <h2>
+                    Add Note
+                </h2>
 
-    if (
-        page ===
-        "achievements"
-    ) {
 
-        document.getElementById(
-            "achievementsPage"
-        ).style.display =
-            "block";
+                <button
+                    onclick="closeModal('noteModal')">
 
+                    ×
 
-        renderAchievements();
+                </button>
 
-    }
+            </div>
 
 
-    document
-        .querySelectorAll(
-            ".nav-item"
-        )
-        .forEach(
-            nav =>
-                nav.classList
-                    .remove("active")
-        );
+            <label>
+                Title
+            </label>
 
 
-    if (item) {
+            <input
+                id="noteTitle"
+                placeholder="Java OOP"
+            >
 
-        item.classList.add(
-            "active"
-        );
 
-    }
+            <label>
+                Note
+            </label>
 
-}
 
+            <textarea
+                id="noteContent"
+                placeholder="Write your note...">
+            </textarea>
 
 
-/* ==========================================
-   MODALS
-========================================== */
+            <button
+                class="submit-button"
+                onclick="saveNote()">
 
-function closeModal(id) {
+                Save Note
 
-    document.getElementById(
-        id
-    ).classList.remove(
-        "show"
-    );
+            </button>
 
-}
+        </div>
 
+    </div>
 
-document
-    .querySelectorAll(".modal")
-    .forEach(
-        modal => {
 
-            modal.addEventListener(
-                "click",
-                event => {
 
-                    if (
-                        event.target ===
-                        modal
-                    ) {
+    <!-- ==================================================
+         PROFILE MODAL
+    ================================================== -->
 
-                        modal.classList
-                            .remove("show");
+    <div
+        class="modal"
+        id="profileModal">
 
-                    }
 
-                }
-            );
+        <div class="modal-box">
 
-        }
-    );
 
+            <div class="modal-header">
 
 
-/* ==========================================
-   MOBILE
-========================================== */
+                <h2>
+                    👤 Profile
+                </h2>
 
-function toggleSidebar() {
 
-    document.getElementById(
-        "sidebar"
-    ).classList.toggle(
-        "open"
-    );
+                <button
+                    onclick="closeModal('profileModal')">
 
-}
+                    ×
 
+                </button>
 
+            </div>
 
-/* ==========================================
-   SEARCH
-========================================== */
 
-function openSearch() {
+            <label>
+                Your Name
+            </label>
 
-    alert(
-        "Search feature can be added next."
-    );
 
-}
+            <input
+                id="profileName"
+            >
 
 
-function openNotifications() {
+            <button
+                class="submit-button"
+                onclick="saveProfile()">
 
-    alert(
-        "You currently have " +
-        activities.length +
-        " learning activities."
-    );
+                Save Name
 
-}
+            </button>
 
 
+            <button
+                class="logout-button"
+                onclick="logout()">
 
-/* ==========================================
-   SECURITY
-========================================== */
+                Logout
 
-function escapeHTML(
-    text
-) {
+            </button>
 
-    const div =
-        document.createElement(
-            "div"
-        );
+        </div>
 
+    </div>
 
-    div.textContent =
-        text;
 
 
-    return div.innerHTML;
+    <!-- ==================================================
+         JAVASCRIPT
+    ================================================== -->
 
-}
-
-
-
-/* ==========================================
-   RENDER
-========================================== */
-
-function renderAll() {
-
-    renderStats();
-
-    renderCourses();
-
-    renderGoals();
-
-    renderActivities();
-
-    renderAchievements();
-
-    renderNotes();
-
-}
-
-
-
-/* ==========================================
-   START
-========================================== */
-
-checkLogin();
-
-</script>
+    <script src="script.js"></script>
 
 </body>
 
