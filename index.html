@@ -2418,178 +2418,80 @@
    DATA
 ========================================== */
 
-let courses =
-    JSON.parse(
-        localStorage.getItem(
-            "lemon_courses"
-        )
-    ) || [
+const defaultCourses = [
+    {
+        id: 1,
+        name: "DSA",
+        icon: "💻",
+        topics: [
+            { id: 101, name: "Arrays", completed: true },
+            { id: 102, name: "Strings", completed: true },
+            { id: 103, name: "Two Pointer", completed: false },
+            { id: 104, name: "Hashing", completed: false },
+            { id: 105, name: "Sliding Window", completed: false },
+            { id: 106, name: "Binary Search", completed: false },
+            { id: 107, name: "Recursion", completed: false },
+            { id: 108, name: "Linked List", completed: false },
+            { id: 109, name: "Stack", completed: false },
+            { id: 110, name: "Queue", completed: false }
+        ]
+    },
 
-        {
-            id: 1,
+    {
+        id: 2,
+        name: "Java",
+        icon: "☕",
+        topics: [
+            { id: 201, name: "Java Basics", completed: false },
+            { id: 202, name: "OOPs", completed: false },
+            { id: 203, name: "Inheritance", completed: false },
+            { id: 204, name: "Polymorphism", completed: false },
+            { id: 205, name: "Abstraction", completed: false },
+            { id: 206, name: "Interfaces", completed: false },
+            { id: 207, name: "Exception Handling", completed: false },
+            { id: 208, name: "Collections", completed: false },
+            { id: 209, name: "Multithreading", completed: false },
+            { id: 210, name: "JDBC", completed: false }
+        ]
+    },
 
-            name: "DSA",
+    {
+        id: 3,
+        name: "Aptitude",
+        icon: "🧠",
+        topics: [
+            { id: 301, name: "Number System", completed: false },
+            { id: 302, name: "Percentages", completed: false },
+            { id: 303, name: "Profit and Loss", completed: false },
+            { id: 304, name: "Ratio and Proportion", completed: false },
+            { id: 305, name: "Averages", completed: false },
+            { id: 306, name: "Time and Work", completed: false },
+            { id: 307, name: "Time, Speed and Distance", completed: false },
+            { id: 308, name: "Simple and Compound Interest", completed: false },
+            { id: 309, name: "Probability", completed: false },
+            { id: 310, name: "Permutation and Combination", completed: false },
+            { id: 311, name: "Data Interpretation", completed: false },
+            { id: 312, name: "Logical Reasoning", completed: false },
+            { id: 313, name: "Verbal Reasoning", completed: false }
+        ]
+    },
 
-            icon: "💻",
+    {
+        id: 4,
+        name: "Core CS",
+        icon: "🖥️",
+        topics: [
+            { id: 401, name: "Operating Systems", completed: false },
+            { id: 402, name: "DBMS", completed: false },
+            { id: 403, name: "Computer Networks", completed: false },
+            { id: 404, name: "OOPs", completed: false }
+        ]
+    }
+];
 
-            topics: [
-
-               {
-    id: 101,
-    name: "Arrays",
-    completed: true
-},
-
-{
-    id: 102,
-    name: "Strings",
-    completed: true
-},
-
-{
-    id: 103,
-    name: "Two Pointer",
-    completed: false
-},
-
-{
-    id: 104,
-    name: "Hashing",
-    completed: false
-},
-
-{
-    id: 105,
-    name: "Sliding Window",
-    completed: false
-},
-
-{
-    id: 106,
-    name: "Binary Search",
-    completed: false
-},
-
-{
-    id: 107,
-    name: "Recursion",
-    completed: false
-},
-
-{
-    id: 108,
-    name: "Linked List",
-    completed: false
-},
-
-{
-    id: 109,
-    name: "Stack",
-    completed: false
-},
-
-{
-    id: 110,
-    name: "Queue",
-    completed: false
-}
-
-            ]
-
-        },
-
-        {
-            id: 2,
-
-            name: "Java",
-
-            icon: "☕",
-
-            topics: [
-
-                {
-    id: 2,
-    name: "Aptitude",
-    icon: "🧠",
-    topics: [
-        { id: 201, name: "Number System", completed: false },
-        { id: 202, name: "Percentages", completed: false },
-        { id: 203, name: "Profit and Loss", completed: false },
-        { id: 204, name: "Ratio and Proportion", completed: false },
-        { id: 205, name: "Averages", completed: false },
-        { id: 206, name: "Time and Work", completed: false },
-        { id: 207, name: "Time, Speed and Distance", completed: false },
-        { id: 208, name: "Simple and Compound Interest", completed: false },
-        { id: 209, name: "Probability", completed: false },
-        { id: 210, name: "Permutation and Combination", completed: false },
-        { id: 211, name: "Data Interpretation", completed: false },
-        { id: 212, name: "Logical Reasoning", completed: false },
-        { id: 213, name: "Verbal Reasoning", completed: false }
-    ]
-}
-            ]
-
-        },
-
-        {
-            id: 3,
-
-            name: "Core CS",
-
-            icon: "🖥️",
-
-            topics: [
-
-                {
-                    id: 301,
-                    name: "Operating Systems",
-                    completed: false
-                },
-
-                {
-                    id: 302,
-                    name: "DBMS",
-                    completed: false
-                }
-
-            ]
-
-        }
-
-    ];
-
-
-let goals =
-    JSON.parse(
-        localStorage.getItem(
-            "lemon_goals"
-        )
-    ) || [];
-
-
-let activities =
-    JSON.parse(
-        localStorage.getItem(
-            "lemon_activities"
-        )
-    ) || [];
-
-
-let notes =
-    JSON.parse(
-        localStorage.getItem(
-            "lemon_notes"
-        )
-    ) || [];
-
-
-let currentCourseId = null;
-
-let editingNoteId = null;
-
-let calendarDate = new Date();
-
-
+let courses = JSON.parse(
+    localStorage.getItem("lemon_courses")
+) || defaultCourses;
 
 /* ==========================================
    LOGIN
