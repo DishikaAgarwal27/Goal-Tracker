@@ -2419,6 +2419,7 @@
 ========================================== */
 
 const defaultCourses = [
+
     {
         id: 1,
         name: "DSA",
@@ -2442,56 +2443,146 @@ const defaultCourses = [
         name: "Java",
         icon: "☕",
         topics: [
-            { id: 201, name: "Java Basics", completed: false },
-            { id: 202, name: "OOPs", completed: false },
-            { id: 203, name: "Inheritance", completed: false },
-            { id: 204, name: "Polymorphism", completed: false },
-            { id: 205, name: "Abstraction", completed: false },
-            { id: 206, name: "Interfaces", completed: false },
-            { id: 207, name: "Exception Handling", completed: false },
-            { id: 208, name: "Collections", completed: false },
-            { id: 209, name: "Multithreading", completed: false },
-            { id: 210, name: "JDBC", completed: false }
+            { id: 201, name: "Java Fundamentals", completed: true },
+            { id: 202, name: "OOP", completed: true },
+            { id: 203, name: "Collections", completed: false }
         ]
     },
 
     {
         id: 3,
-        name: "Aptitude",
-        icon: "🧠",
+        name: "Core CS",
+        icon: "🖥️",
         topics: [
-            { id: 301, name: "Number System", completed: false },
-            { id: 302, name: "Percentages", completed: false },
-            { id: 303, name: "Profit and Loss", completed: false },
-            { id: 304, name: "Ratio and Proportion", completed: false },
-            { id: 305, name: "Averages", completed: false },
-            { id: 306, name: "Time and Work", completed: false },
-            { id: 307, name: "Time, Speed and Distance", completed: false },
-            { id: 308, name: "Simple and Compound Interest", completed: false },
-            { id: 309, name: "Probability", completed: false },
-            { id: 310, name: "Permutation and Combination", completed: false },
-            { id: 311, name: "Data Interpretation", completed: false },
-            { id: 312, name: "Logical Reasoning", completed: false },
-            { id: 313, name: "Verbal Reasoning", completed: false }
+            { id: 301, name: "Operating Systems", completed: false },
+            { id: 302, name: "DBMS", completed: false },
+            { id: 303, name: "Computer Networks", completed: false },
+            { id: 304, name: "OOPs", completed: false }
         ]
     },
 
     {
         id: 4,
-        name: "Core CS",
-        icon: "🖥️",
+        name: "Aptitude",
+        icon: "🧠",
         topics: [
-            { id: 401, name: "Operating Systems", completed: false },
-            { id: 402, name: "DBMS", completed: false },
-            { id: 403, name: "Computer Networks", completed: false },
-            { id: 404, name: "OOPs", completed: false }
+            { id: 401, name: "Number System", completed: false },
+            { id: 402, name: "Percentages", completed: false },
+            { id: 403, name: "Profit and Loss", completed: false },
+            { id: 404, name: "Ratio and Proportion", completed: false },
+            { id: 405, name: "Averages", completed: false },
+            { id: 406, name: "Time and Work", completed: false },
+            { id: 407, name: "Time, Speed and Distance", completed: false },
+            { id: 408, name: "Simple and Compound Interest", completed: false },
+            { id: 409, name: "Probability", completed: false },
+            { id: 410, name: "Permutation and Combination", completed: false },
+            { id: 411, name: "Data Interpretation", completed: false },
+            { id: 412, name: "Logical Reasoning", completed: false },
+            { id: 413, name: "Verbal Reasoning", completed: false }
         ]
     }
 ];
 
-let courses = JSON.parse(
-    localStorage.getItem("lemon_courses")
-) || defaultCourses;
+/*
+   Load saved courses, but automatically restore any predefined
+   course/topic that is missing. Existing completion progress is kept.
+*/
+let savedCourses = [];
+
+try {
+    savedCourses = JSON.parse(
+        localStorage.getItem("lemon_courses") || "[]"
+    );
+} catch (error) {
+    savedCourses = [];
+}
+
+if (!Array.isArray(savedCourses)) {
+    savedCourses = [];
+}
+
+let courses = savedCourses;
+
+/* Add missing default courses and missing topics. */
+defaultCourses.forEach(defaultCourse => {
+
+    let existingCourse = courses.find(
+        course =>
+            course &&
+            (
+                course.name === defaultCourse.name ||
+                course.id === defaultCourse.id
+            )
+    );
+
+    if (!existingCourse) {
+        courses.push(
+            JSON.parse(JSON.stringify(defaultCourse))
+        );
+        return;
+    }
+
+    if (!Array.isArray(existingCourse.topics)) {
+        existingCourse.topics = [];
+    }
+
+    defaultCourse.topics.forEach(defaultTopic => {
+
+        const existingTopic = existingCourse.topics.find(
+            topic =>
+                topic &&
+                (
+                    topic.name === defaultTopic.name ||
+                    topic.id === defaultTopic.id
+                )
+        );
+
+        if (!existingTopic) {
+            existingCourse.topics.push(
+                JSON.parse(JSON.stringify(defaultTopic))
+            );
+        }
+    });
+});
+
+/* Save the repaired course list so it stays available after refresh. */
+localStorage.setItem(
+    "lemon_courses",
+    JSON.stringify(courses)
+);
+
+
+let goals =
+    JSON.parse(
+        localStorage.getItem(
+            "lemon_goals"
+        )
+    ) || [];
+
+
+let activities =
+    JSON.parse(
+        localStorage.getItem(
+            "lemon_activities"
+        )
+    ) || [];
+
+
+let notes =
+    JSON.parse(
+        localStorage.getItem(
+            "lemon_notes"
+        )
+    ) || [];
+
+
+let currentCourseId = null;
+
+let editingNoteId = null;
+
+let calendarDate = new Date();
+
+
 
 /* ==========================================
    LOGIN
@@ -2924,120 +3015,100 @@ function renderStats() {
 function renderCourses() {
 
     const container =
-        document.getElementById(
-            "courseGrid"
-        );
+        document.getElementById("courseGrid");
 
+    if (!container) {
+        return;
+    }
 
-    container.innerHTML =
-        "";
+    container.innerHTML = "";
 
+    if (!Array.isArray(courses)) {
+        return;
+    }
 
-    courses.forEach(
-        course => {
+    courses.forEach(course => {
 
-            const total =
-                course.topics.length;
+        if (!course) {
+            return;
+        }
 
+        if (!Array.isArray(course.topics)) {
+            course.topics = [];
+        }
 
-            const completed =
-                course.topics.filter(
-                    topic =>
-                        topic.completed
-                ).length;
+        const total = course.topics.length;
 
+        const completed = course.topics.filter(
+            topic => topic && topic.completed
+        ).length;
 
-            const percentage =
-                total === 0
-                    ? 0
-                    : Math.round(
-                        completed /
-                        total *
-                        100
-                    );
+        const percentage =
+            total === 0
+                ? 0
+                : Math.round(
+                    completed / total * 100
+                );
 
+        container.innerHTML += `
 
-            container.innerHTML += `
+            <div class="course-card">
 
-                <div class="course-card">
+                <div class="course-top">
 
-                    <div class="course-top">
+                    <div class="course-icon">
+                        ${course.icon || "📚"}
+                    </div>
 
-                        <div class="course-icon">
-                            ${course.icon}
-                        </div>
+                    <div class="course-info">
 
+                        <h3>
+                            ${escapeHTML(course.name || "Untitled Course")}
+                        </h3>
 
-                        <div class="course-info">
-
-                            <h3>
-                                ${escapeHTML(course.name)}
-                            </h3>
-
-                            <p>
-                                ${completed}
-                                /
-                                ${total}
-                                topics completed
-                            </p>
-
-                        </div>
-
-
-                        <div class="course-percent">
-
-                            ${percentage}%
-
-                        </div>
+                        <p>
+                            ${completed}
+                            /
+                            ${total}
+                            topics completed
+                        </p>
 
                     </div>
 
-
-                    <div class="progress">
-
-                        <div
-                            class="progress-bar"
-                            style="
-                                width:
-                                ${percentage}%">
-                        </div>
-
-                    </div>
-
-
-                    <div class="course-actions">
-
-                        <button
-                            class="view-button"
-                            onclick="
-                                openTopics(
-                                    ${course.id}
-                                )
-                            ">
-
-                            View Topics
-
-                        </button>
-
-
-                        <button
-                            class="delete-button"
-                            onclick="
-                                deleteCourse(
-                                    ${course.id}
-                                )
-                            ">
-
-                            Delete
-
-                        </button>
-
+                    <div class="course-percent">
+                        ${percentage}%
                     </div>
 
                 </div>
-            `;
-        }
-    );
+
+                <div class="progress">
+
+                    <div
+                        class="progress-bar"
+                        style="width: ${percentage}%">
+                    </div>
+
+                </div>
+
+                <div class="course-actions">
+
+                    <button
+                        class="view-button"
+                        onclick="openTopics(${course.id})">
+                        View Topics
+                    </button>
+
+                    <button
+                        class="delete-button"
+                        onclick="deleteCourse(${course.id})">
+                        Delete
+                    </button>
+
+                </div>
+
+            </div>
+        `;
+    });
 
 }
 
@@ -4597,9 +4668,10 @@ function escapeHTML(
 
 function renderAll() {
 
-    renderStats();
-
+    /* Render courses first so a chart/stat error cannot hide the cards. */
     renderCourses();
+
+    renderStats();
 
     renderGoals();
 
